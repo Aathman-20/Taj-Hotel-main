@@ -1,0 +1,192 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── Taj Hotel Design Tokens ─── */
+@theme inline {
+  /* Font Families */
+  --font-cinzel:    var(--font-cinzel);
+  --font-cormorant: var(--font-cormorant);
+  --font-marcellus: var(--font-marcellus);
+  --font-garamond:  var(--font-garamond);
+
+  /* Keep mono for code/debug only */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Taj Brand Colors */
+  --color-taj-maroon:      #5C1A1B;
+  --color-taj-gold:        #C9A24B;
+  --color-taj-cream:       #F5EFE3;
+  --color-taj-dark:        #1A1410;
+  --color-taj-offwhite:    #EDE6D8;
+  --color-taj-placeholder: #2A211C;
+
+  /* shadcn/ui semantic overrides — mapped to Taj palette */
+  --color-background:      var(--background);
+  --color-foreground:      var(--foreground);
+  --color-card:            var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover:         var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary:         var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary:       var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:           var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent:          var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive:     var(--destructive);
+  --color-border:          var(--border);
+  --color-input:           var(--input);
+  --color-ring:            var(--ring);
+  --color-sidebar:         var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:  var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border:  var(--sidebar-border);
+  --color-sidebar-ring:    var(--sidebar-ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Radius scale */
+  --radius-sm:  calc(var(--radius) * 0.6);
+  --radius-md:  calc(var(--radius) * 0.8);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ─── CSS Custom Properties (shadcn/ui semantic layer, Taj-themed) ─── */
+:root {
+  --background:            #1A1410;
+  --foreground:            #EDE6D8;
+  --card:                  #2A211C;
+  --card-foreground:       #EDE6D8;
+  --popover:               #2A211C;
+  --popover-foreground:    #EDE6D8;
+  --primary:               #C9A24B;
+  --primary-foreground:    #1A1410;
+  --secondary:             #5C1A1B;
+  --secondary-foreground:  #EDE6D8;
+  --muted:                 #2A211C;
+  --muted-foreground:      #9C8B78;
+  --accent:                #C9A24B;
+  --accent-foreground:     #1A1410;
+  --destructive:           oklch(0.577 0.245 27.325);
+  --border:                rgba(201, 162, 75, 0.15);
+  --input:                 rgba(201, 162, 75, 0.12);
+  --ring:                  #C9A24B;
+  --radius:                0.5rem;
+
+  /* Sidebar (inherits from main palette) */
+  --sidebar:               #2A211C;
+  --sidebar-foreground:    #EDE6D8;
+  --sidebar-primary:       #C9A24B;
+  --sidebar-primary-foreground: #1A1410;
+  --sidebar-accent:        #5C1A1B;
+  --sidebar-accent-foreground: #EDE6D8;
+  --sidebar-border:        rgba(201, 162, 75, 0.15);
+  --sidebar-ring:          #C9A24B;
+
+  /* Charts */
+  --chart-1: #C9A24B;
+  --chart-2: #5C1A1B;
+  --chart-3: #F5EFE3;
+  --chart-4: #9C8B78;
+  --chart-5: #2A211C;
+}
+
+/* No separate .dark block needed — the site is dark by design.
+   If ever needed, mirror or deepen the values here. */
+.dark {
+  --background:            #1A1410;
+  --foreground:            #EDE6D8;
+  --card:                  #2A211C;
+  --card-foreground:       #EDE6D8;
+  --popover:               #2A211C;
+  --popover-foreground:    #EDE6D8;
+  --primary:               #C9A24B;
+  --primary-foreground:    #1A1410;
+  --secondary:             #5C1A1B;
+  --secondary-foreground:  #EDE6D8;
+  --muted:                 #2A211C;
+  --muted-foreground:      #9C8B78;
+  --accent:                #C9A24B;
+  --accent-foreground:     #1A1410;
+  --destructive:           oklch(0.704 0.191 22.216);
+  --border:                rgba(201, 162, 75, 0.15);
+  --input:                 rgba(201, 162, 75, 0.12);
+  --ring:                  #C9A24B;
+  --sidebar:               #2A211C;
+  --sidebar-foreground:    #EDE6D8;
+  --sidebar-primary:       #C9A24B;
+  --sidebar-primary-foreground: #1A1410;
+  --sidebar-accent:        #5C1A1B;
+  --sidebar-accent-foreground: #EDE6D8;
+  --sidebar-border:        rgba(201, 162, 75, 0.15);
+  --sidebar-ring:          #C9A24B;
+}
+
+/* ─── Base Layer ─── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-garamond), "Georgia", serif;
+    font-size: 17px;
+    line-height: 1.7;
+    background-color: #1A1410;
+    color: #EDE6D8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-garamond), "Georgia", serif;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-cinzel), serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+
+  /* Gold selection highlight */
+  ::selection {
+    background-color: rgba(201, 162, 75, 0.25);
+    color: #F5EFE3;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #1A1410;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(201, 162, 75, 0.3);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 162, 75, 0.5);
+  }
+}
