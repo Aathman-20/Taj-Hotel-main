@@ -1,11 +1,10 @@
 'use client';
 import { CategoryType } from '@/types';
 
-const CATEGORIES: CategoryType[] = ['Starters', 'Mains', 'Heritage', 'Desserts'];
+const CATEGORIES: CategoryType[] = ['Starters', 'Heritage', 'Desserts'];
 
 const CATEGORY_COLORS: Record<CategoryType, string> = {
   Starters: '#6B3A2A',
-  Mains: '#5C1A1B',
   Heritage: '#4A4233',
   Desserts: '#7A5230',
 };

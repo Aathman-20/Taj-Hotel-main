@@ -29,7 +29,7 @@ export default function DishCarousel({ dishes, categoryColor }: DishCarouselProp
   // Preload all dish images
   useEffect(() => {
     dishes.forEach((d) => {
-      const src = d.cutoutUrl || d.imageUrl;
+      const src = d.imageUrl;
       const img = new window.Image();
       img.src = src;
     });
@@ -39,7 +39,7 @@ export default function DishCarousel({ dishes, categoryColor }: DishCarouselProp
     if (isAnimating || N <= 1) return;
     setIsAnimating(true);
     setActiveIndex((prev) => dir === 'next' ? (prev + 1) % N : (prev - 1 + N) % N);
-    setTimeout(() => setIsAnimating(false), 650);
+    setTimeout(() => setIsAnimating(false), 550);
   }, [isAnimating, N]);
 
   const getRole = (index: number): Role => {
@@ -52,10 +52,10 @@ export default function DishCarousel({ dishes, categoryColor }: DishCarouselProp
   };
 
   const getRoleStyles = (role: Role): React.CSSProperties => {
-    const transition = 'transform 650ms cubic-bezier(0.4,0,0.2,1), filter 650ms cubic-bezier(0.4,0,0.2,1), opacity 650ms cubic-bezier(0.4,0,0.2,1), left 650ms cubic-bezier(0.4,0,0.2,1)';
+    const transition = 'transform 550ms cubic-bezier(0.25,0.46,0.45,0.94), filter 550ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 550ms cubic-bezier(0.25,0.46,0.45,0.94), left 550ms cubic-bezier(0.25,0.46,0.45,0.94)';
     const base: React.CSSProperties = { position: 'absolute', aspectRatio: '0.6 / 1', transition, willChange: 'transform, filter, opacity' };
     switch (role) {
-      case 'center': return { ...base, transform: `translateX(-50%) scale(${isMobile ? 1.25 : 1.68})`, filter: 'none', opacity: 1, zIndex: 20, left: '50%', height: isMobile ? '60%' : '92%', bottom: isMobile ? '22%' : 0 };
+      case 'center': return { ...base, transform: `translateX(-50%) scale(${isMobile ? 1.25 : 1.68})`, filter: 'none', opacity: 1, zIndex: 20, left: '50%', height: isMobile ? '60%' : '92%', bottom: isMobile ? '22%' : '5%' };
       case 'left':   return { ...base, transform: 'translateX(-50%) scale(1)', filter: 'blur(2px)', opacity: 0.85, zIndex: 10, left: isMobile ? '20%' : '30%', height: isMobile ? '16%' : '28%', bottom: isMobile ? '32%' : '12%' };
       case 'right':  return { ...base, transform: 'translateX(-50%) scale(1)', filter: 'blur(2px)', opacity: 0.85, zIndex: 10, left: isMobile ? '80%' : '70%', height: isMobile ? '16%' : '28%', bottom: isMobile ? '32%' : '12%' };
       case 'back':   return { ...base, transform: 'translateX(-50%) scale(1)', filter: 'blur(4px)', opacity: 1, zIndex: 5, left: '50%', height: isMobile ? '13%' : '22%', bottom: isMobile ? '32%' : '12%' };
@@ -74,19 +74,12 @@ export default function DishCarousel({ dishes, categoryColor }: DishCarouselProp
     });
   };
 
-  // SVG grain overlay data URI
-  const grainSvg = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E")`;
 
   return (
     <div
       className="relative w-full overflow-hidden"
-      style={{ height: '100vh', backgroundColor: categoryColor, transition: 'background-color 650ms cubic-bezier(0.4,0,0.2,1)' }}
+      style={{ height: 'calc(100vh - 130px)', backgroundColor: categoryColor, transition: 'background-color 550ms cubic-bezier(0.25,0.46,0.45,0.94)' }}
     >
-      {/* Grain overlay */}
-      <div
-        style={{ position: 'absolute', inset: 0, backgroundImage: grainSvg, backgroundSize: '200px 200px', backgroundRepeat: 'repeat', opacity: 0.4, zIndex: 50, pointerEvents: 'none' }}
-      />
-
       {/* Ghost text */}
       <div
         style={{ position: 'absolute', insetInline: 0, top: '18%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, pointerEvents: 'none', userSelect: 'none' }}
@@ -99,13 +92,6 @@ export default function DishCarousel({ dishes, categoryColor }: DishCarouselProp
         </span>
       </div>
 
-      {/* Top-left wordmark */}
-      <div style={{ position: 'absolute', top: 24, left: 16, zIndex: 60 }}>
-        <span className="font-cinzel text-white uppercase" style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.18em', opacity: 0.9 }}>
-          Shamiana
-        </span>
-      </div>
-
       {/* Dish images carousel */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 3 }}>
         {dishes.map((dish, index) => {
@@ -114,10 +100,10 @@ export default function DishCarousel({ dishes, categoryColor }: DishCarouselProp
             <div key={dish.id} style={getRoleStyles(role)}>
               <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                 <Image
-                  src={dish.cutoutUrl || dish.imageUrl}
+                  src={dish.imageUrl}
                   alt={dish.name}
                   fill
-                  style={{ objectFit: 'contain', objectPosition: 'bottom center' }}
+                  style={{ objectFit: 'contain', objectPosition: 'center center' }}
                   sizes="(max-width: 640px) 60vw, 40vw"
                   draggable={false}
                 />

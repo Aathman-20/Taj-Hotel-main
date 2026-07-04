@@ -20,13 +20,14 @@ export default function DietToggleHero({ onChange = () => {} }: DietToggleHeroPr
       {/* Veg image */}
       <div
         className="absolute inset-0 transition-opacity duration-700 ease-in-out"
-        style={{ opacity: diet === 'veg' ? 1 : 0 }}
+        style={{ opacity: diet === 'veg' ? 1 : 0, overflow: 'hidden' }}
       >
         <Image
           src="/images/veg-spread.jpg"
           alt="Vegetarian spread"
           fill
           className="object-cover"
+          style={{ transform: 'scale(1.18)', transformOrigin: 'center 40%' }}
           sizes="100vw"
           priority
         />

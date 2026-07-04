@@ -3,7 +3,7 @@ export interface MenuItem {
   name: string;
   description: string;
   price: number;
-  category: 'Starters' | 'Mains' | 'Heritage' | 'Desserts';
+  category: 'Starters' | 'Heritage' | 'Desserts';
   dietType: 'veg' | 'nonveg';
   imageUrl: string;
   cutoutUrl?: string;
@@ -43,4 +43,4 @@ export interface CartItem {
 }
 
 export type DietType = 'veg' | 'nonveg';
-export type CategoryType = 'Starters' | 'Mains' | 'Heritage' | 'Desserts';
+export type CategoryType = 'Starters' | 'Heritage' | 'Desserts';

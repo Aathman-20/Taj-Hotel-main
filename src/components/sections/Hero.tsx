@@ -10,6 +10,7 @@ const chapters = [
     eyebrow: 'TAJ MAHAL PALACE, MUMBAI',
     title: 'A Legacy Carved in Stone',
     sub: 'An invitation to dine like royalty',
+    history: null,
   },
   {
     eyebrow: 'THE GARDENS — EST. 1903',
@@ -21,6 +22,7 @@ const chapters = [
     eyebrow: 'THE TABLE',
     title: 'Dine Under a Thousand Candles',
     sub: 'A moment, beautifully kept',
+    history: null,
   },
 ];
 
@@ -36,35 +38,45 @@ export default function Hero() {
     if (!video || !section) return;
 
     const setup = () => {
-      // Kill any stale instance before creating a new one
       stRef.current?.kill();
 
       stRef.current = ScrollTrigger.create({
         trigger: section,
         start: 'top top',
-        end: '+=3000',
-        scrub: 1,          // 1s lag — smooths out FPS jitter from rapid scroll events
+        end: '+=4500',
+        scrub: 2,
         pin: true,
-        anticipatePin: 1,  // prevents layout jump when pin engages
+        anticipatePin: 1,
         onUpdate: (self) => {
-          // Only seek if video has enough data (readyState 2 = HAVE_CURRENT_DATA)
           if (video.readyState >= 2 && video.duration) {
-            const target = self.progress * video.duration;
-            // Clamp to valid range — avoids an out-of-bounds DOMException
-            video.currentTime = Math.min(Math.max(target, 0), video.duration - 0.01);
+            // Remap progress so each of the 3 video segments takes equal scroll distance
+            // Video is 10s: 0-3s = frame1, 3-6.5s = frame2, 6.5-10s = frame3
+            // We want equal scroll distance per frame so middle frame doesn't feel faster
+            const p = self.progress;
+            let targetTime: number;
+            if (p < 0.333) {
+              // Frame 1: 0-3s mapped to scroll 0-0.333
+              targetTime = (p / 0.333) * 3;
+            } else if (p < 0.666) {
+              // Frame 2: 3-6.5s mapped to scroll 0.333-0.666
+              targetTime = 3 + ((p - 0.333) / 0.333) * 3.5;
+            } else {
+              // Frame 3: 6.5-10s mapped to scroll 0.666-1.0
+              targetTime = 6.5 + ((p - 0.666) / 0.334) * 3.5;
+            }
+            video.currentTime = Math.min(Math.max(targetTime, 0), video.duration - 0.01);
+
+            if (p < 0.33) setChapter(0);
+            else if (p < 0.66) setChapter(1);
+            else setChapter(2);
           }
-          if (self.progress < 0.33) setChapter(0);
-          else if (self.progress < 0.66) setChapter(1);
-          else setChapter(2);
         },
       });
 
       ScrollTrigger.refresh();
     };
 
-    // Force the browser to start loading video data immediately
     video.load();
-
     if (video.readyState >= 1) {
       setup();
     } else {
@@ -72,10 +84,7 @@ export default function Hero() {
       video.addEventListener('loadedmetadata', onMeta);
     }
 
-    return () => {
-      stRef.current?.kill();
-      stRef.current = null;
-    };
+    return () => { stRef.current?.kill(); stRef.current = null; };
   }, []);
 
   return (
@@ -88,34 +97,39 @@ export default function Hero() {
         className="absolute inset-0 h-full w-full object-cover"
         src="/videos/taj-hero.mp4"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/25 to-black/70" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/20 to-black/75" />
 
-      {/* Chapter text — bottom-left, prominent */}
       {chapters.map((c, i) => (
         <div
           key={i}
-          className="absolute bottom-24 left-8 md:left-14 text-left transition-opacity duration-700 ease-in-out z-10"
-          style={{ opacity: chapter === i ? 1 : 0, pointerEvents: 'none' }}
+          className="absolute text-left z-10"
+          style={{
+            bottom: '10%',
+            left: '3.5rem',
+            right: '3.5rem',
+            opacity: chapter === i ? 1 : 0,
+            transition: 'opacity 800ms ease-in-out',
+            pointerEvents: 'none',
+          }}
         >
-          <p className="font-cinzel text-sm md:text-base tracking-[0.25em] text-taj-gold mb-4 uppercase">
+          <p className="font-cinzel text-sm md:text-base tracking-[0.25em] text-taj-gold mb-3 uppercase">
             {c.eyebrow}
           </p>
-          <h1 className="font-cormorant text-5xl md:text-7xl lg:text-8xl text-taj-cream mb-4 leading-tight max-w-4xl">
+          <h1 className="font-cormorant text-5xl md:text-6xl lg:text-7xl text-taj-cream mb-3 leading-tight max-w-3xl">
             {c.title}
           </h1>
-          <p className="font-cormorant italic text-xl md:text-2xl text-taj-offwhite/85 max-w-2xl">
+          <p className="font-cormorant italic text-lg md:text-xl text-taj-offwhite/85 max-w-2xl mb-3">
             {c.sub}
           </p>
           {c.history && (
-            <p className="font-garamond text-taj-offwhite/70 text-base md:text-lg mt-4 max-w-xl leading-relaxed">
+            <p className="font-garamond text-taj-offwhite/70 text-base md:text-lg max-w-xl leading-relaxed">
               {c.history}
             </p>
           )}
         </div>
       ))}
 
-      {/* Scroll cue — bottom-right so it doesn't overlap chapter text */}
-      <div className="absolute bottom-10 right-10 md:right-14 z-20 flex flex-col items-center gap-2">
+      <div className="absolute bottom-8 right-10 z-20 flex flex-col items-center gap-2">
         <span className="font-cinzel text-[10px] tracking-[0.3em] text-taj-offwhite/50 uppercase">Scroll</span>
         <div className="w-px h-8 bg-taj-gold/40 animate-pulse" />
       </div>
